@@ -38,11 +38,7 @@ throttledRequest(options, function (error, response, body) {
 
 ###As a stream
 ```javascript
-var request = throttledRequest(options);
-request.on('error', function (error) {
-    //Handle request error
-});
-request.pipe(someWriteStream);
+throttledRequest(options).pipe(someWriteStream);
 ```
 
 ##The `request` event
