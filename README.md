@@ -14,7 +14,7 @@ $ npm install throttled-request
 
 ##Usage
 First, you must set it up:
-```
+```javascript
 var request = require('request')
 ,   throttledRequest = require('throttled-request')(request);
 
@@ -37,7 +37,7 @@ throttledRequest(options, function (error, response, body) {
 ```
 
 ###As a stream
-```
+```javascript
 var request = throttledRequest(options);
 request.on('error', function (error) {
     //Handle request error
@@ -49,7 +49,7 @@ request.pipe(someWriteStream);
 Every request object returned by `throttledRequest` emits a `request` event just after the actual request is made.
 
 ##Full example
-```
+```javascript
 var request = require('request')
 ,   throttledRequest = require('throttled-request')(request)
 ,   startedAt = Date.now();
