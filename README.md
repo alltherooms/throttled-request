@@ -42,7 +42,7 @@ throttledRequest(options).pipe(someWriteStream);
 ```
 
 ##The `request` event
-`throttledRequest` emits a `request` event just after an actual request is made.
+`throttledRequest` emits a `request` event just after each actual request is made.
 
 ##Full example
 ```javascript
