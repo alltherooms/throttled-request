@@ -42,7 +42,7 @@ throttledRequest(options).pipe(someWriteStream);
 ```
 
 ##The `request` event
-Every request object returned by `throttledRequest` emits a `request` event just after the actual request is made.
+`throttledRequest` emits a `request` event just after an actual request is made.
 
 ##Full example
 ```javascript
@@ -55,16 +55,17 @@ throttledRequest.configure({
   milliseconds: 1000
 });
 
-//Make 10 requests in parallel 
+//Make 10 requests in parallel
 for (var i = 0; i < 10; i++) {
   throttledRequest('https://www.google.com/')
-    .on('request', function () {
-      console.log('Making a request. Elapsed time: %d ms', Date.now() - startedAt);
-    })
     .on('response', function () {
       console.log('Got response. Elapsed time: %d ms', Date.now() - startedAt);
-    }); 
+    });
 }
+
+throttledRequest.on('request', function () {
+  console.log('Making a request. Elapsed time: %d ms', Date.now() - startedAt);
+});
 
 /*Output:
 
