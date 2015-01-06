@@ -55,6 +55,10 @@ throttledRequest.configure({
   milliseconds: 1000
 });
 
+throttledRequest.on('request', function () {
+  console.log('Making a request. Elapsed time: %d ms', Date.now() - startedAt);
+});
+
 //Make 10 requests in parallel
 for (var i = 0; i < 10; i++) {
   throttledRequest('https://www.google.com/')
@@ -63,12 +67,27 @@ for (var i = 0; i < 10; i++) {
     });
 }
 
-throttledRequest.on('request', function () {
-  console.log('Making a request. Elapsed time: %d ms', Date.now() - startedAt);
-});
-
 /*Output:
-
+Making a request. Elapsed time: 3 ms
+Making a request. Elapsed time: 5 ms
+Got response. Elapsed time: 488 ms
+Got response. Elapsed time: 509 ms
+Making a request. Elapsed time: 1002 ms
+Making a request. Elapsed time: 1003 ms
+Got response. Elapsed time: 1450 ms
+Got response. Elapsed time: 1513 ms
+Making a request. Elapsed time: 2003 ms
+Making a request. Elapsed time: 2003 ms
+Got response. Elapsed time: 2431 ms
+Got response. Elapsed time: 2470 ms
+Making a request. Elapsed time: 3004 ms
+Making a request. Elapsed time: 3005 ms
+Got response. Elapsed time: 3446 ms
+Got response. Elapsed time: 3451 ms
+Making a request. Elapsed time: 4007 ms
+Making a request. Elapsed time: 4007 ms
+Got response. Elapsed time: 4440 ms
+Got response. Elapsed time: 4783 ms
 */
 ```
 
