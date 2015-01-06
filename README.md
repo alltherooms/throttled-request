@@ -59,7 +59,7 @@ throttledRequest.on('request', function () {
   console.log('Making a request. Elapsed time: %d ms', Date.now() - startedAt);
 });
 
-//Make 10 requests in parallel
+//Throttle 10 requests in parallel
 for (var i = 0; i < 10; i++) {
   throttledRequest('https://www.google.com/')
     .on('response', function () {
