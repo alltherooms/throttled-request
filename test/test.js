@@ -1,8 +1,11 @@
 var ThrottledRequest = require("../")
 ,   nock = require("nock")
+,   sinon = require("sinon")
 ,   async = require("async");
 
 describe("ThrottledRequest", function () {
+  var clock;
+
   nock.disableNetConnect();
 
   function mockTimes (times) {
@@ -20,8 +23,15 @@ describe("ThrottledRequest", function () {
   });
 
   describe("throttling", function () {
+    beforeEach(function () {
+      clock = sinon.useFakeTimers(Date.now());
+    });
+    
+    afterEach(function() {
+      clock.restore();
+    });
+
     it("sends 3 requests every half a second", function (done) {
-      this.timeout(4000)
       var self = this;
 
       //Configure throttledRequest
@@ -52,10 +62,13 @@ describe("ThrottledRequest", function () {
       expect(this.request).to.have.been.called.exactly(3);
 
       //After half a second
-      setTimeout(function () {
-        expect(self.request).to.have.been.called.exactly(6);
-      }, 500);
+      clock.tick(500);
 
+      expect(self.request).to.have.been.called.exactly(6);
+
+      //After another half a second      
+      clock.tick(500);
+      
       //When all requests have finished
       function onEnd (error) {
         if (error) return done(error);
@@ -68,6 +81,8 @@ describe("ThrottledRequest", function () {
 
   describe("use cases", function () {
     beforeEach(function () {
+      clock = sinon.useFakeTimers(Date.now());
+
       //Mock 2 calls to the server
       mockTimes(2);
 
@@ -78,19 +93,25 @@ describe("ThrottledRequest", function () {
       });
     });
 
+    afterEach(function() {
+      clock.restore();
+    });
+
     it("allows to use request with callback", function (done) {
       this.throttledRequest("http://ping.com", function (error, response, body) {
         if (error) return done(error);
         expect(response.statusCode).to.equal(200);
         expect(body).to.equal("pong");
       });
-
+      
       this.throttledRequest({uri: "http://ping.com"}, function (error, response, body) {
         if (error) return done(error);
         expect(response.statusCode).to.equal(200);
         expect(body).to.equal("pong");
         done();
       });
+
+      clock.tick(100);
     });
 
     it("allows to use request as a stream", function (done) {
@@ -122,6 +143,8 @@ describe("ThrottledRequest", function () {
         expect(dataTwo).to.equal("pong");
         done();
       });
+      
+      clock.tick(100);
     });
   });
 
