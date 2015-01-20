@@ -24,6 +24,20 @@ throttledRequest.configure({
 });//This will throttle the requests so no more than 5 are made every second
 ```
 
+Or you may use a configurable throttle by providing a function that returns the next delay, in milliseconds:
+```javascript
+var request = require('request')
+,   throttledRequest = require('throttled-request')(request);
+
+throttledRequest.configure({
+  requests: 1,
+  milliseconds: function() {
+    var minSeconds = 5, maxSeconds = 15;
+    return Math.floor((Math.random() * (maxSeconds - minSeconds) + minSeconds) * 1000);  // in milliseconds
+  }
+});//This will throttle the requests so no more than 1 is made every 5 to 15 seconds (random delay)
+```
+
 Then you can use `throttledRequest` just as you use [request](https://github.com/request/request): passing a callback, or as a stream.
 
 ###Passing a callback

@@ -148,6 +148,72 @@ describe("ThrottledRequest", function () {
     });
   });
 
+  describe("configurable delay", function() {
+    beforeEach(function () {
+      clock = sinon.useFakeTimers(Date.now());
+
+      //Mock 2 calls to the server
+      mockTimes(3);
+
+      var delay = [1000, 2000, 3000];
+
+      //Configure throttledRequest
+      this.throttledRequest.configure({
+        requests: 1,
+        milliseconds: function() {
+          return delay.shift();
+        }
+      });
+    });
+
+    afterEach(function() {
+      clock.restore();
+    });
+
+    it("allows configurable delay via provided user function", function(done) {
+      var self = this;
+
+      var requests = [];
+      for (var i = 0; i < 4; i++) {
+        requests.push(function (callback) {
+          self.throttledRequest({uri: "http://ping.com"}, function (error, response, body) {
+            if (error) return done(error);
+            expect(response.statusCode).to.equal(200);
+            expect(body).to.equal("pong");
+            callback();
+          });
+        });
+      };
+
+      //Mock 3 calls to the server
+      mockTimes(4);
+
+      //Send 3 requests at the same time
+      async.parallel(requests, onEnd);
+
+      expect(this.request).to.have.been.called.exactly(1);
+
+      //After one second
+      clock.tick(1000);
+      expect(self.request).to.have.been.called.exactly(2);
+
+      //After another two seconds
+      clock.tick(2000);
+      expect(self.request).to.have.been.called.exactly(3);
+      
+      //Finally, after another 3 seconds
+      clock.tick(3000);
+      expect(self.request).to.have.been.called.exactly(4);
+
+      //When all requests have finished
+      function onEnd (error) {
+        if (error) return done(error);
+        expect(self.request).to.have.been.called.exactly(4);
+        done();
+      };
+    });
+  });
+
   describe("handling errors", function () {
     before(function () {
       nock.enableNetConnect("127.0.0.1");
