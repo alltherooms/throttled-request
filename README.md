@@ -2,7 +2,7 @@
 Node.js module to easily throttle HTTP requests.
 
 ##How it works
-This tool was made to work with the popular [request](https://github.com/request/request) module, which simplifies the HTTP requests in Node.js. Therefore, this must be consireded a wrapper around **request**.
+This tool was made to work with the popular [request](https://github.com/request/request) module, which simplifies the HTTP requests in Node.js. Therefore, this must be considered a wrapper around **request**.
 
 First, you instantiate a **throttledRequest** instance by passing a **request** function, which is going to act as the requester - you still need to `$npm install request` independently. - After this you can configure the throttle rate *(number of requests / time)*, then you're able to use **throttled-request** to perform your HTTP requests.
 
