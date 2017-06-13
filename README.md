@@ -1,18 +1,18 @@
-#throttled-request
+# throttled-request
 Node.js module to easily throttle HTTP requests.
 
-##How it works
+## How it works
 This tool was made to work with the popular [request](https://github.com/request/request) module, which simplifies the HTTP requests in Node.js. Therefore, this must be considered a wrapper around **request**.
 
 First, you instantiate a **throttledRequest** instance by passing a **request** function, which is going to act as the requester - you still need to `$npm install request` independently. - After this you can configure the throttle rate *(number of requests / time)*, then you're able to use **throttled-request** to perform your HTTP requests.
 
-##Installation
+## Installation
 Install it using [npm](https://www.npmjs.com/)
 ```
 $ npm install throttled-request
 ```
 
-##Usage
+## Usage
 First, you must set it up:
 ```javascript
 var request = require('request')
@@ -40,7 +40,7 @@ throttledRequest.configure({
 
 Then you can use `throttledRequest` just as you use [request](https://github.com/request/request): passing a callback, or as a stream.
 
-###Passing a callback
+### Passing a callback
 ```javascript
 throttledRequest(options, function (error, response, body) {
     if (error) {
@@ -50,15 +50,15 @@ throttledRequest(options, function (error, response, body) {
 });
 ```
 
-###As a stream
+### As a stream
 ```javascript
 throttledRequest(options).pipe(someWriteStream);
 ```
 
-##The `request` event
+## The `request` event
 `throttledRequest` emits a `request` event just after each actual request is made.
 
-##Full example
+## Full example
 ```javascript
 var request = require('request')
 ,   throttledRequest = require('throttled-request')(request)
@@ -105,13 +105,13 @@ Got response. Elapsed time: 4783 ms
 */
 ```
 
-##Can I use everything that comes with **request**?
+## Can I use everything that comes with **request**?
 No, there's some things you can't use. For example, the shortcut functions `.get`, `.post`, `.put`, etc. are not available. If you'd like to have them, this is a great opportunity to contribute!
 
-##Running tests
+## Running tests
 Run the tests with npm
 ```
 $ npm test
 ```
 
-##License (MIT)
+## License (MIT)
