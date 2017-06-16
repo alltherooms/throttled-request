@@ -60,11 +60,13 @@ describe("ThrottledRequest", function () {
       async.parallel(requests, onEnd);
 
       expect(this.request).to.have.been.called.exactly(3);
+      expect(this.throttledRequest.get('pendingRequests')).to.equal(4);
 
       //After half a second
       clock.tick(500);
 
       expect(self.request).to.have.been.called.exactly(6);
+      expect(this.throttledRequest.get('pendingRequests')).to.equal(1);
 
       //After another half a second      
       clock.tick(500);
@@ -73,11 +75,11 @@ describe("ThrottledRequest", function () {
       function onEnd (error) {
         if (error) return done(error);
         expect(self.request).to.have.been.called.exactly(7);
+        expect(self.throttledRequest.get('pendingRequests')).to.equal(0);
         done();
       };
     });
   });
-
 
   describe("use cases", function () {
     beforeEach(function () {
